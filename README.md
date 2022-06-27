@@ -1,4 +1,5 @@
-## Hackable HTTP client based on native fetch
+# Hackable HTTP client based on native fetch
+![](https://img.shields.io/npm/dm/extended-fetch?style=flat-square)
 
 * No dependencies
 * Middleware
@@ -8,6 +9,28 @@
 * ESM + UMD
 * Tiny size < 4KB
 
+### **Interface:**
+
+```typescript
+type MiddlewareType = 'request' | 'response';
+type MiddlewareHandlers = Array<MiddlewareHandler | unknown>;
+type Middleware = {
+  [key in MiddlewareType]?: MiddlewareHandlers
+};
+type MiddlewareHandler = (params: RequestInit) => Promise<RequestInit>;
+
+type CreateMethod = {
+  query?: unknown,
+  url?: string,
+  timeout?: number,
+  middleware?: Middleware,
+  params?: RequestInit,
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
+  format?: (property) format?: "formData" | "text" | "blob" | "json" | "arrayBuffer">,
+}
+```
+
+[More info about params can be found on MDN](https://developer.mozilla.org/en-US/docs/Web/API/fetch#parameters)
 
 ### **Basic usage:**
 
@@ -25,6 +48,20 @@ api.get('/api/books/12')
 const api = createHttpClient();
 
 api.get({ url: '/api/books/12', timeout: 10000 });
+```
+
+### **Abort with signal passed:**
+
+```javascript
+const api = createHttpClient();
+const abortController = new AbortController();
+
+api.get({
+  url: '/api/books/12',
+  params: { signal: abortController.signal }
+});
+
+setTimeout(() => abortController.abort(), 5000);
 ```
 
 ### **Middleware:**
