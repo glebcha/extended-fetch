@@ -1,0 +1,14 @@
+.sw?
+.idea/
+dist/
+build/
+node/
+node_modules/
+storybook-static/
+target/
+*-old/
+.size-snapshot.json
+.eslintcache
+.openrc
+.vscode
+tsconfig.tsbuildinfo

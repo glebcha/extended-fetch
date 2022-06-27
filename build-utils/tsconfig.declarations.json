@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true,
+    "outDir": "../build/es"
+  },
+  "include": ["../src"],
+  "exclude": [
+    "../node_modules/*",
+    "../build/*",
+    "../src/**/*.spec.*",
+    "../src/**/*.stories.*"
+  ]
+}

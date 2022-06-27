@@ -1,0 +1,10 @@
+{
+    "names": {
+        "lib": "extended-fetch",
+        "global": "ExtendedFetch"
+    },
+    "paths": {
+        "input": "src/index.ts",
+        "output": "build"
+    }
+}

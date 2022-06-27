@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  commands:
+    linter:
+      glob: "*.{js,ts,jsx,tsx}"
+      run: npx eslint  --cache --fix {staged_files}
+pre-push:
+  parallel: true
+  commands:
+    test:
+      run: npx uvu -r ts-node/register src spec
