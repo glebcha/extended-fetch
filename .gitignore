@@ -12,3 +12,8 @@ target/
 .openrc
 .vscode
 tsconfig.tsbuildinfo
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
