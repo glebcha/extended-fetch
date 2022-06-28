@@ -1,13 +1,21 @@
-# Hackable HTTP client based on native fetch
+# [Hackable HTTP client based on native fetch](https://www.npmjs.com/package/extended-fetch)
+![](https://img.shields.io/npm/v/extended-fetch?style=flat-square)
+![](https://img.shields.io/node/v/extended-fetch?style=flat-square)
 ![](https://img.shields.io/npm/dm/extended-fetch?style=flat-square)
 
 * No dependencies
-* Middleware
+* Middleware can be applied for all requests or single
 * Requests can be aborted by timeout
 * Modular architecture
 * Typescript
 * ESM + UMD
 * Tiny size < 4KB
+
+### **Install:**
+
+```
+npm i extended-fetch
+```
 
 ### **Interface:**
 
@@ -39,7 +47,12 @@ const api = createHttpClient();
 
 api.get('/api/books/12')
  .then((jsonFormattedResponse) => {})
- .catch((pureResponseInstance) => {});
+ .catch(async (pureResponseInstance) => {
+  const { status, statusText } = pureResponseInstance;
+  const response = await pureResponseInstance.json();
+
+  return { status, statusText, response };
+ });
 ```
 
 ### **Abort request by timeout:**
