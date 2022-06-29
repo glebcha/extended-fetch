@@ -11,6 +11,8 @@
 * ESM + UMD
 * Tiny size < 4KB
 
+[![Edit extended-fetch](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/lingering-shape-8pml00?fontsize=14&hidenavigation=1&theme=dark)
+
 ### **Install:**
 
 ```
