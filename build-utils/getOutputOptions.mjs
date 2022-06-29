@@ -2,7 +2,13 @@ import path from 'path';
 
 export function getOutputOptions({ moduleType, version, names, paths }) {
   const isESM = moduleType === 'es';
-  const footer = `globalThis.ExtendedFetch.version = '${version}';`;
+  const footer = `
+  if (globalThis.ExtendedFetch ) {
+    globalThis.ExtendedFetch.version = '${version}';
+  } else {
+    globalThis.ExtendedFetch = {version: '${version}'};
+  }
+  `;
 
   const output = Object.assign(
     {
