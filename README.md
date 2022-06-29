@@ -2,6 +2,7 @@
 ![](https://img.shields.io/npm/v/extended-fetch?style=flat-square)
 ![](https://img.shields.io/node/v/extended-fetch?style=flat-square)
 ![](https://img.shields.io/npm/dm/extended-fetch?style=flat-square)
+[![](https://data.jsdelivr.com/v1/package/npm/extended-fetch/badge)](https://www.jsdelivr.com/package/npm/extended-fetch)
 
 * No dependencies
 * Middleware can be applied for all requests or single
