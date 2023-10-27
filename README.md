@@ -58,6 +58,26 @@ api.get('/api/books/12')
  });
 ```
 
+### **Custom response type:**
+
+```typescript
+const api = createHttpClient();
+
+interface Book {
+  id: string,
+  description?: string,
+}
+
+api.get<Book>('/api/books/12')
+ .then(({ id, description }) => {})
+ .catch(async (pureResponseInstance) => {
+  const { status, statusText } = pureResponseInstance;
+  const response = await pureResponseInstance.json();
+
+  return { status, statusText, response };
+ });
+```
+
 ### **Abort request by timeout:**
 
 ```javascript
