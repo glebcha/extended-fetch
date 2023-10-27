@@ -20,8 +20,7 @@ import {
  */
 
 export function createHttpClient(options?: CreateHttpClientOptions) {
-  const methods: Array<`${Lowercase<Methods>}`> = Object.values(Methods);
-  const client =  methods.reduce((methodsMap, method) => ({
+  const client =  Object.values(Methods).reduce((methodsMap, method) => ({
     ...methodsMap,
     [method]: initMethod(method, options),
   }), {} as Record<Lowercase<Method>, typeof createMethod>);

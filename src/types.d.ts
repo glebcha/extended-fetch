@@ -17,7 +17,7 @@ export type CreateMethod = {
   timeout?: number,
   middleware?: Middleware,
   params?: RequestInit,
-  method?: Method,
+  method?: Uppercase<`${Methods}`>,
   format?: keyof Omit<Body, 'body' | 'bodyUsed'>,
 };
 
