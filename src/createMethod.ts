@@ -18,7 +18,7 @@ import { CreateMethod, FormattedResponse } from './types';
  * @returns {Promise} - resolved or rejected promise
  */
 
-export async function createMethod({
+export async function createMethod<Result = undefined>({
   query,
   timeout,
   url = '/',
@@ -66,7 +66,7 @@ export async function createMethod({
           await applyMiddleware(formattedResponse, middleware.response) :
           formattedResponse;
 
-      return processedResponse;
+      return processedResponse as (Result extends undefined ? typeof processedResponse : Result);
     });
 }
 
