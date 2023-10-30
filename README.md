@@ -12,6 +12,12 @@
 * ESM + UMD
 * Tiny size < 4KB
 
+React + Typescript sandbox:
+
+[![Edit extended-fetch](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/extended-fetch-react-typescript-ryxrdj?file=/src/App/App.tsx)
+
+Browser sandbox:
+
 [![Edit extended-fetch](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/lingering-shape-8pml00?fontsize=14&hidenavigation=1&theme=dark)
 
 ### **Install:**
