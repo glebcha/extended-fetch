@@ -55,7 +55,9 @@ export async function createMethod<Result = undefined>({
   return fetch(url, requestOptions)
     .then((response) => {
       if (response.ok) {
-        return response[format]();
+        const clonedResponse = response.clone();
+
+        return clonedResponse[format]().catch(() => response.text());
       } else {
         throw response;
       }
