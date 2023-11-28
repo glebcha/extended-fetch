@@ -1,0 +1,29 @@
+import { MiddlewareHandlers } from '../types';
+import { is } from '../utils/getType';
+
+export function applyMiddleware(
+  options: unknown,
+  meta: Partial<Response>,
+  middleware?: MiddlewareHandlers,
+) {
+  const isValidMiddleware = Array.isArray(middleware) && middleware.length > 0;
+
+  return isValidMiddleware ? apply(options, meta, middleware) : Promise.resolve(options);
+}
+
+
+function apply(
+  options: unknown,
+  meta: Partial<Response>,
+  middleware: MiddlewareHandlers,
+) {
+  const isValidProcessor = (processor: unknown) => ['Function', 'AsyncFunction', 'Promise'].some((accessor) => is[accessor](processor));
+
+  return  middleware.reduce<Promise<unknown>>((changedOptions, processor) => {
+    const shouldProcess = isValidProcessor(processor);
+
+    return shouldProcess ?
+      changedOptions.then(data => processor(data, meta)).catch(() => ({})) :
+      Promise.resolve(changedOptions);
+  }, Promise.resolve(options));
+}

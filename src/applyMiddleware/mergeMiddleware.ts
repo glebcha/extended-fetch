@@ -1,7 +1,7 @@
 import {
   Middleware,
   MiddlewareType
-} from './types';
+} from '../types';
 
 function createArray<Result = Array<unknown>>(...args: Array<unknown>) {
   return args.reduce((result: Array<Result>, arg) => Array.isArray(arg) ? result.concat(arg) : result, []);
