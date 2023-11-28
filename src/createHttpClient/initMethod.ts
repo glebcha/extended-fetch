@@ -5,7 +5,7 @@ import {
   CreateMethod,
   Method
 } from '../types';
-import { is } from '../utils/getType';
+import { is } from '../utils';
 
 import { createMethod } from './createMethod';
 

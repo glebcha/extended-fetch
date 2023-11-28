@@ -1,7 +1,6 @@
 import { applyMiddleware } from '../applyMiddleware';
 import { CreateMethod, FormattedResponse } from '../types';
-import { getBody } from '../utils/getBody';
-import { is } from '../utils/getType';
+import { getBody,is } from '../utils';
 
 /**
  * @namespace httpClient

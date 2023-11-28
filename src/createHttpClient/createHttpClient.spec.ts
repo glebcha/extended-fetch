@@ -14,7 +14,7 @@ import {
   queryInvalid
 } from '../mock';
 import { BasicObject, CreateMethod } from '../types';
-import { is } from '../utils/getType';
+import { is } from '../utils';
 
 async function handleRequest({ request }: Parameters<Parameters<typeof http.all>[1]>[0]) {
   const body = await request.json().catch(() => '');

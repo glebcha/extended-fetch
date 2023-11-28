@@ -1,5 +1,5 @@
 import { MiddlewareHandlers } from '../types';
-import { is } from '../utils/getType';
+import { is } from '../utils';
 
 export function applyMiddleware(
   options: unknown,
