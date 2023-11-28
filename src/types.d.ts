@@ -5,11 +5,11 @@ export type BasicObject = Record<string, unknown>;
 export type Method = keyof typeof Methods;
 
 export type MiddlewareType = 'request' | 'response';
-export type MiddlewareHandlers = Array<MiddlewareHandler | unknown>;
-type Middleware = {
+export type MiddlewareHandler = (params: unknown, meta: Partial<Response>) => Promise<typeof params>;
+export type MiddlewareHandlers = Array<MiddlewareHandler>;
+export type Middleware = {
   [key in MiddlewareType]?: MiddlewareHandlers
 };
-export type MiddlewareHandler = (params: RequestInit) => Promise<RequestInit>;
 
 export type CreateMethod = {
   query?: unknown,
