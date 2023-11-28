@@ -1,7 +1,7 @@
-import { applyMiddleware } from './applyMiddleware';
-import { getBody } from './getBody';
-import { is } from './getType';
-import { CreateMethod, FormattedResponse } from './types';
+import { applyMiddleware } from '../applyMiddleware';
+import { CreateMethod, FormattedResponse } from '../types';
+import { getBody } from '../utils/getBody';
+import { is } from '../utils/getType';
 
 /**
  * @namespace httpClient
@@ -41,34 +41,48 @@ export async function createMethod<Result = undefined>({
     shouldSetRequestBody && { body: getBody(query) },
     restParams,
   );
-  const processedOptions = await applyMiddleware<RequestInit>(options, middleware.request);
-  const requestOptions = {
-    ...processedOptions,
-    method,
-    signal: abortSignal,
-  };
+  const processedOptions = await applyMiddleware(
+    options,
+    { headers: new Headers() },
+    middleware.request,
+  );
+  const isValidOptions = is.Object(processedOptions);
+  const requestOptions = Object.assign(
+    {
+      method,
+      signal: abortSignal,
+    },
+    isValidOptions && processedOptions,
+  );
 
   if (is.Number(timeout)) {
     setTimeout(() => abortController.abort(), timeout);
   }
 
   return fetch(url, requestOptions)
-    .then((response) => {
-      if (response.ok) {
-        const clonedResponse = response.clone();
-
-        return clonedResponse[format]().catch(() => response.text());
-      } else {
-        throw response;
-      }
-    })
-    .then(async (formattedResponse: Awaited<FormattedResponse>) => {
+    .then(async (response) => {
+      const meta = {
+        ok: response.ok,
+        headers: response.headers,
+        status: response.status,
+      };
+      const clonedResponse = response.clone();
+      const formattedResponse =
+        await clonedResponse[format]()
+          .catch(() => response.text()) as FormattedResponse;
       const processedResponse =
         Array.isArray(middleware.response) ?
-          await applyMiddleware(formattedResponse, middleware.response) :
+          await applyMiddleware(formattedResponse, meta, middleware.response) :
           formattedResponse;
+      const isProcessed =
+        is.Object(processedResponse) &&
+        'ok' in processedResponse &&
+        processedResponse.ok;
+
+      if (!(isProcessed || response.ok)) {
+        throw response;
+      }
 
       return processedResponse as (Result extends undefined ? typeof processedResponse : Result);
     });
 }
-

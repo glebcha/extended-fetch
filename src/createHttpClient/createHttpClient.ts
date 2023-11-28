@@ -1,10 +1,11 @@
-import {  Methods } from './constants';
-import { createMethod } from './createMethod';
-import { initMethod } from './initMethod';
+import {  Methods } from '../constants';
 import {
   CreateHttpClientOptions,
   Method
-} from './types';
+} from '../types';
+
+import { createMethod } from './createMethod';
+import { initMethod } from './initMethod';
 
 /**
  * @namespace httpClient

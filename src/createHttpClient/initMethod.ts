@@ -1,12 +1,13 @@
-import {  Methods } from './constants';
-import { createMethod } from './createMethod';
-import { is } from './getType';
-import { mergeMiddleware } from './mergeMiddleware';
+import { mergeMiddleware } from '../applyMiddleware/mergeMiddleware';
+import {  Methods } from '../constants';
 import {
   CreateHttpClientOptions,
   CreateMethod,
   Method
-} from './types';
+} from '../types';
+import { is } from '../utils/getType';
+
+import { createMethod } from './createMethod';
 
 export function initMethod(method: `${Lowercase<Methods>}`, options?: CreateHttpClientOptions) {
   return (methodOptions?: unknown) => {
