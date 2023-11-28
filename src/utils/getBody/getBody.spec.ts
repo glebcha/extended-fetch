@@ -2,15 +2,16 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
+import { query } from '../../mock';
+
 import { getBody } from './getBody';
-import { query } from './mock';
 
-const getBodySuite = suite('getBody');
+const clientSuite = suite('Safe JSON Stringify');
 
-getBodySuite('should output object with formatted sql string', async () => {
+clientSuite('should output object with formatted sql string', async () => {
   const result = getBody(query);
 
   assert.equal(result.length, 22);
 });
 
-getBodySuite.run();
+clientSuite.run();

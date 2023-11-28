@@ -1,0 +1,1 @@
+export { getBody } from './getBody';
