@@ -27,7 +27,6 @@ export function initAuthMiddleware(initParams: AuthMiddlewareParams) {
     if (shouldProcessAuth) {
       const body = getBody({ refreshToken: currentSessionTokens.refreshToken });
       const sanitizedOptions = is.Object(options) ? options : {};
-      const sanitizedHeaders = sanitizedOptions?.headers ?? {};
       const errorHandler =
         typeof handleAuthError === 'function' ?
           handleAuthError :
@@ -38,13 +37,14 @@ export function initAuthMiddleware(initParams: AuthMiddlewareParams) {
         .then(async (response) => {
           const tokens = await response.json().catch(() => null) as ReturnType<AuthMiddlewareParams['getTokens']> | null;
           const { accessToken } = getTokens(tokens);
+          const sanitizedHeaders = Object.assign(
+            { ...sanitizedOptions?.headers ?? {} },
+            accessToken && { Authorization: `Bearer ${accessToken}` },
+          );
           const optionsWithAuth = {
             ...sanitizedOptions,
             ok: response.ok,
-            headers: {
-              ...sanitizedHeaders,
-              Authorization: `Bearer ${accessToken}`,
-            },
+            headers: sanitizedHeaders,
           };
 
           setTokens(tokens);
