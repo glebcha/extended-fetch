@@ -20,6 +20,7 @@ const checkTypes: Array<string> = [
 const specialCheckFunctions = {
   Date: (value: unknown): boolean => (value instanceof Date),
   Object: isObject,
+  Headers: isHeaders,
 };
 
 const checkFunctions = checkTypes.reduce<CheckFunctions & typeof specialCheckFunctions>((checkers, type) => ({
@@ -29,6 +30,10 @@ const checkFunctions = checkTypes.reduce<CheckFunctions & typeof specialCheckFun
 
 function isObject(income: unknown): income is Record<string | number | symbol, unknown> {
   return Object.prototype.toString.call(income) === '[object Object]';
+}
+
+function isHeaders(income: unknown): income is Headers {
+  return Object.prototype.toString.call(income) === '[object Headers]';
 }
 
 export { checkFunctions as is };
