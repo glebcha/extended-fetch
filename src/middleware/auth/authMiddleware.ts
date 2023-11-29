@@ -13,11 +13,11 @@ export function initAuthMiddleware(initParams: AuthMiddlewareParams) {
     getHeaders,
     handleAuthError,
   } = initParams;
-  const sanitizedUrl = typeof url === 'function' ? url() : url;
 
   return async (...params: Parameters<MiddlewareHandler>) => {
     const [options, meta] = params;
     const currentSessionTokens = getTokens();
+    const sanitizedUrl = typeof url === 'function' ? await url() : url;
     const headers =
       typeof getHeaders === 'function' ?
         getHeaders(meta) :
