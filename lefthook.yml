@@ -8,4 +8,4 @@ pre-push:
   parallel: true
   commands:
     test:
-      run: npx uvu -r ts-node/register src spec
+      run: npx uvu -r esbuild-register src spec
