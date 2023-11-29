@@ -1,5 +1,6 @@
 export interface AuthMiddlewareParams {
-  url: string;
+  url: string | (() => string);
+  method?: RequestInit['method'];
   errorCodes?: Response['status'][];
   getTokens: (tokens?: unknown) => { accessToken: string; refreshToken: string };
   setTokens: (tokens?: unknown) => void;

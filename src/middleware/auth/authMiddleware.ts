@@ -6,12 +6,14 @@ import { AuthMiddlewareParams } from './types';
 export function initAuthMiddleware(initParams: AuthMiddlewareParams) {
   const {
     url,
+    method = 'get',
     errorCodes = [401],
     getTokens,
     setTokens,
     getHeaders,
     handleAuthError,
   } = initParams;
+  const sanitizedUrl = typeof url === 'function' ? url() : url;
 
   return async (...params: Parameters<MiddlewareHandler>) => {
     const [options, meta] = params;
@@ -19,7 +21,7 @@ export function initAuthMiddleware(initParams: AuthMiddlewareParams) {
     const headers =
       typeof getHeaders === 'function' ?
         getHeaders(meta) :
-        { Authorization: `Bearer ${currentSessionTokens.accessToken}` };
+        { Authorization: `Bearer ${currentSessionTokens.refreshToken}` };
     const shouldProcessAuth = errorCodes.some(errorCode => errorCode === meta.status);
 
     if (shouldProcessAuth) {
@@ -32,7 +34,7 @@ export function initAuthMiddleware(initParams: AuthMiddlewareParams) {
           // eslint-disable-next-line no-console
           () => console.warn('Failed to refresh authorization token');
 
-      return fetch(url, { method: 'post', body, headers })
+      return fetch(sanitizedUrl, { method, body, headers })
         .then(async (response) => {
           const tokens = await response.json().catch(() => null) as ReturnType<AuthMiddlewareParams['getTokens']> | null;
           const { accessToken } = getTokens(tokens);
