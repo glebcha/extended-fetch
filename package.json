@@ -8,6 +8,7 @@
   "browser": "build/umd/extended-fetch.umd.js",
   "files": [
     "build",
+    "!build/**/tsconfig.*",
     "README.md"
   ],
   "scripts": {
