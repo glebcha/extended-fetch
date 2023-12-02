@@ -4,9 +4,9 @@ export function getOutputOptions({ moduleType, version, names, paths }) {
   const isESM = moduleType === 'es';
   const footer = `
   if (globalThis.ExtendedFetch ) {
-    globalThis.ExtendedFetch.version = '${version}';
+    globalThis.${names.global}.version = '${version}';
   } else {
-    globalThis.ExtendedFetch = {version: '${version}'};
+    globalThis.${names.global} = {version: '${version}'};
   }
   `;
 
