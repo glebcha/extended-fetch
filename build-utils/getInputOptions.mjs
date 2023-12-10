@@ -5,7 +5,7 @@ import esbuild from 'rollup-plugin-esbuild'
 import filesize from 'rollup-plugin-filesize';
 import renameNodeModules from 'rollup-plugin-rename-node-modules';
 
-export function getInputOptions({ moduleType, paths }) {
+export function getInputOptions({ moduleType, names, paths }) {
   const isESM = moduleType === 'es';
   const isProduction = process.env.NODE_ENV === 'production';
 
@@ -15,6 +15,7 @@ export function getInputOptions({ moduleType, paths }) {
         replace({
           preventAssignment: true,
           'process.env.NODE_ENV': JSON.stringify('production'),
+          'process.env.LIB_ID': JSON.stringify(names.global),
         }),
         nodeResolve({
           mainFields: ['jsnext:main', 'module', 'browser', 'main'],
