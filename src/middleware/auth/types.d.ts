@@ -1,6 +1,8 @@
+import { Methods } from '../../constants';
+
 export interface AuthMiddlewareParams {
   url: string | (() => Promise<string>);
-  method?: RequestInit['method'];
+  method?: `${Methods}`;
   errorCodes?: Response['status'][];
   getTokens: (tokens?: unknown) => { accessToken: string; refreshToken: string };
   setTokens: (tokens?: unknown) => void;
