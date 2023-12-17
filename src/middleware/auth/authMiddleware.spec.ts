@@ -15,6 +15,7 @@ import {
   queryInvalid
 } from '../../mock';
 import { BasicObject } from '../../types';
+import { is } from '../../utils';
 
 import { initAuthMiddleware } from './authMiddleware';
 
@@ -31,7 +32,7 @@ const server = setupServer(
       { headers, status: isInvalid ? 401 : 200 },
     );
   }),
-  http.post(authRefreshEndpoint, ({ request }) => {
+  http.get(authRefreshEndpoint, ({ request }) => {
     const headers = request.headers;
 
     return HttpResponse.json(
@@ -47,12 +48,28 @@ clientSuite.before(() => server.listen());
 clientSuite.after.each(() => server.resetHandlers());
 clientSuite.after(() => server.close());
 
-clientSuite.only('should apply auth middleware', async () => {
-  const authParams = { url: authRefreshEndpoint, getTokens, setTokens: () => {} };
+clientSuite('should apply auth middleware', async () => {
+  const authParams = {
+    url: authRefreshEndpoint,
+    getTokens,
+    setTokens: (tokens: unknown) => {
+      const { accessToken = '' } = is.Object(tokens) ? tokens : {};
+
+      if (accessToken) {
+        //@ts-expect-error mocked response
+        global.accessToken = accessToken;
+      }
+    },
+    handleAuthError: () => {
+      // redirect to login page
+    },
+  };
   const { post } = createHttpClient({ middleware: { response: [initAuthMiddleware(authParams)] } });
-  const response = await post<BasicObject & { headers: Request['headers'] }>({ url: endpoint, query: queryInvalid });
-  // @ts-expect-error header assertion
-  assert.is(response.headers.Authorization, 'Bearer 4321');
+
+  await post<BasicObject & { headers: Request['headers'] }>({ url: endpoint, query: queryInvalid });
+
+  //@ts-expect-error mocked response
+  assert.is(global.accessToken, '4321');
 });
 
 clientSuite.run();

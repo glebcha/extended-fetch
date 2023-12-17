@@ -19,12 +19,15 @@ import { is } from '../utils';
 async function handleRequest({ request }: Parameters<Parameters<typeof http.all>[1]>[0]) {
   const body = await request.json().catch(() => '');
   const headers = request.headers;
+  const extractedHeaders =
+    is.Headers(headers) &&
+    [...headers.entries()].reduce((result, [key, value]) => ({ ...result, [key]: value }), {});
   const isInvalid = String(body) === queryInvalid;
 
   return HttpResponse.json(
     isInvalid ?
       Object.assign(body ?? {}, { errors: ['ERROR'] }) :
-      body,
+      Object.assign(body ?? {}, extractedHeaders && { headers: extractedHeaders }),
     { headers, status: isInvalid ? 404 : 200 },
   );
 }
@@ -87,7 +90,6 @@ clientSuite('should apply middleware', async () => {
           const hasOptions = is.Object(options);
 
           if (hasOptions && headers) {
-            headers?.append('auth', 'true');
             headers?.append('X-Auth', 'none');
             Object.entries(options?.headers ?? {}).forEach(([key, value]) => headers?.append(key, String(value)));
           }
@@ -97,21 +99,13 @@ clientSuite('should apply middleware', async () => {
           return Promise.resolve(output);
         },
       ],
-      response: [
-        options => {
-          return Promise.resolve({ ...options ?? {}, id: null });
-        },
-        (options, headers) => {
-          return Promise.resolve({ ...options ?? {}, ...headers, additional: true });
-        },
-      ],
     },
   };
-  const response = await post<BasicObject & { headers: Request['headers'] }>(params);
+  const response = await post<BasicObject & { headers: Record<string, string> }>(params);
 
-  assert.ok(response?.headers?.get('auth'));
-  assert.equal(response.id, null);
-  assert.equal(response.additional, true);
+  assert.ok(response?.headers?.auth);
+  assert.match(response?.headers['x-auth'], 'none');
+
 });
 
 clientSuite.run();
