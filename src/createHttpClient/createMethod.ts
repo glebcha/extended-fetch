@@ -64,24 +64,25 @@ export async function createMethod<Result = undefined>({
         ok: response.ok,
         headers: response.headers,
         status: response.status,
+        request: { url, ...requestOptions },
       };
       const clonedResponse = response.clone();
       const formattedResponse =
         await clonedResponse[format]()
           .catch(() => response.text()) as FormattedResponse;
-      const processedResponse =
+      const processedOptions =
         Array.isArray(middleware.response) ?
           await applyMiddleware(formattedResponse, meta, middleware.response) :
-          formattedResponse;
+          null;
       const isProcessed =
-        is.Object(processedResponse) &&
-        'ok' in processedResponse &&
-        processedResponse.ok;
+        is.Object(processedOptions) &&
+        'ok' in processedOptions &&
+        processedOptions.ok;
 
       if (!(isProcessed || response.ok)) {
         throw response;
       }
 
-      return processedResponse as (Result extends undefined ? typeof processedResponse : Result);
+      return formattedResponse as (Result extends undefined ? typeof formattedResponse : Result);
     });
 }
