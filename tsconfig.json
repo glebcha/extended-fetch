@@ -17,6 +17,7 @@
    "outDir":"./build",
    "lib": [
      "DOM",
+     "DOM.Iterable",
      "ES2017",
      "ES2018",
      "ESNext"
