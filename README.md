@@ -140,3 +140,38 @@ api.post({
   }
 });
 ```
+
+### **Auth Middleware:**
+
+```javascript
+import { createHttpClient, initAuthMiddleware } from 'extended-fetch';
+
+const middleware = {
+  request: [
+    setRequestHeaders: async (options) => options,
+  ],
+  response: [
+    initAuthMiddleware({
+      url: async () => 'refresh',
+      getTokens: () => ({ accessToken: '', refreshToken: '' }),
+      setTokens: () => {},
+      handleAuthError: (error) => console.log(error.message),
+    }),
+  ],
+};
+const api = createHttpClient({ middleware });
+
+export const getPerson = (id: number) => {
+
+  return api
+    .get({ url: `person/${id}` })
+    .catch((error) => {
+      const errorResponse = {
+        status: 'error',
+        code: error.status ?? 0
+      };
+
+      return errorResponse;
+    });
+};
+```
