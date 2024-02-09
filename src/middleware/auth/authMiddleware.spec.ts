@@ -23,7 +23,7 @@ const clientSuite = suite('Authorization Middleware');
 
 const server = setupServer(
   http.post(endpoint, async ({ request }) => {
-    const body = await request.json().catch(() => '');
+    const body = await request.text().catch(() => '');
     const headers = request.headers;
     const isInvalid = String(body) === queryInvalid;
 

@@ -17,12 +17,13 @@ import { BasicObject, CreateMethod } from '../types';
 import { is } from '../utils';
 
 async function handleRequest({ request }: Parameters<Parameters<typeof http.all>[1]>[0]) {
+  const url = new URL(request.url);
   const body = await request.json().catch(() => '');
   const headers = request.headers;
   const extractedHeaders =
     is.Headers(headers) &&
     [...headers.entries()].reduce((result, [key, value]) => ({ ...result, [key]: value }), {});
-  const isInvalid = String(body) === queryInvalid;
+  const isInvalid = url.searchParams.has('invalid');
 
   return HttpResponse.json(
     isInvalid ?
@@ -55,7 +56,7 @@ clientSuite('should not send body in GET request', async () => {
 
 clientSuite('should throw error if api responded with error status', async () => {
   const { post } = createHttpClient();
-  const params = { url: endpoint, query: queryInvalid };
+  const params = { url: `${endpoint}?invalid=true`, query: queryInvalid };
   const { status } = await post(params).catch(({ status }: Response) => ({ status })) as Record<string, BasicObject>;
 
   assert.equal(status, 404);
