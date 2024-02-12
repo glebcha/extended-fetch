@@ -19,6 +19,7 @@ export function initMethod(method: `${Lowercase<Methods>}`, options?: CreateHttp
     const { middleware = {}, ...params } = methodOptions as CreateMethod;
     return createMethod({
       ...params,
+      baseUrl: options?.baseUrl,
       middleware: mergeMiddleware(middleware, options?.middleware),
       method: method.toUpperCase() as Method,
     });

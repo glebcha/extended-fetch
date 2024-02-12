@@ -39,6 +39,7 @@ type MiddlewareHandler = (params: RequestInit) => Promise<RequestInit>;
 type CreateMethod = {
   query?: unknown,
   url?: string,
+  baseUrl?: string,
   timeout?: number,
   middleware?: Middleware,
   params?: RequestInit,

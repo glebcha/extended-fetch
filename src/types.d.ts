@@ -14,6 +14,7 @@ export type Middleware = {
 export type CreateMethod = {
   query?: unknown,
   url?: string,
+  baseUrl?: string;
   timeout?: number,
   middleware?: Middleware,
   params?: RequestInit,
@@ -21,7 +22,10 @@ export type CreateMethod = {
   format?: keyof Omit<Body, 'body' | 'bodyUsed'>,
 };
 
-type CreateHttpClientOptions = { middleware?: Middleware };
+type CreateHttpClientOptions = {
+  baseUrl?: string;
+  middleware?: Middleware;
+};
 
 type ErrorText = 'ErrorText' | 'error_text';
 type ErrorCode = 'ErrorCode' | 'error_code';

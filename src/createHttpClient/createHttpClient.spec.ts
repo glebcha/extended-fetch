@@ -27,8 +27,8 @@ async function handleRequest({ request }: Parameters<Parameters<typeof http.all>
 
   return HttpResponse.json(
     isInvalid ?
-      Object.assign(body ?? {}, { errors: ['ERROR'] }) :
-      Object.assign(body ?? {}, extractedHeaders && { headers: extractedHeaders }),
+      Object.assign(body ?? {}, { url }, { errors: ['ERROR'] }) :
+      Object.assign(body ?? {}, { url },  extractedHeaders && { headers: extractedHeaders }),
     { headers, status: isInvalid ? 404 : 200 },
   );
 }
@@ -37,6 +37,7 @@ const clientSuite = suite('Create Http Client');
 
 const server = setupServer(
   http.post(endpoint, handleRequest),
+  http.post(`${endpoint}data`, handleRequest),
   http.get(endpoint, handleRequest),
 );
 
@@ -52,6 +53,14 @@ clientSuite('should not send body in GET request', async () => {
   const response = await get<Record<string, BasicObject>>(params);
 
   assert.equal(response, '');
+});
+
+clientSuite('should set baseUrl', async () => {
+  const { post } = createHttpClient({ baseUrl: endpoint });
+  const params = { url: 'data', query: mockQuery };
+  const response = await post<Record<string, BasicObject>>(params);
+
+  assert.equal(response.url, `${endpoint}data`);
 });
 
 clientSuite('should throw error if api responded with error status', async () => {

@@ -20,12 +20,15 @@ import { getBody,is } from '../utils';
 export async function createMethod<Result = undefined>({
   query,
   timeout,
-  url = '/',
+  url,
+  baseUrl,
   middleware = {},
   params = {},
   method = 'GET',
   format = 'json',
 }: CreateMethod) {
+  const hasBaseUrl = typeof baseUrl === 'string';
+  const formattedUrl = `${hasBaseUrl ? baseUrl : ''}${hasBaseUrl && !url ? '' : url ?? '/'}`;
   const defaultHeaders = { 'Content-Type': 'application/json' };
   const {
     signal,
@@ -58,7 +61,7 @@ export async function createMethod<Result = undefined>({
     setTimeout(() => abortController.abort(), timeout);
   }
 
-  return fetch(url, requestOptions)
+  return fetch(formattedUrl, requestOptions)
     .then(async (response) => {
       const meta = {
         ok: response.ok,
