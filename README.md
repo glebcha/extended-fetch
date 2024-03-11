@@ -59,7 +59,24 @@ api.get('/api/books/12')
  .then((jsonFormattedResponse) => {})
  .catch(async (pureResponseInstance) => {
   const { status, statusText } = pureResponseInstance;
-  const response = await pureResponseInstance.json();
+
+  return { status, statusText };
+ });
+```
+
+### **Basic error handling:**
+
+```javascript
+const api = createHttpClient();
+
+api.get('/api/books/12')
+ .then((jsonFormattedResponse) => {})
+ .catch(async (pureResponseInstance) => {
+  const {
+    status,
+    statusText,
+    formattedResponse: response
+  } = pureResponseInstance;
 
   return { status, statusText, response };
  });
@@ -79,9 +96,8 @@ api.get<Book>('/api/books/12')
  .then(({ id, description }) => {})
  .catch(async (pureResponseInstance) => {
   const { status, statusText } = pureResponseInstance;
-  const response = await pureResponseInstance.json();
 
-  return { status, statusText, response };
+  return { status, statusText };
  });
 ```
 
