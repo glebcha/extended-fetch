@@ -14,7 +14,8 @@ import { getBody,is } from '../utils';
  * @param {Object} options.params
  * @param {string} options.method
  * @param {string} options.format
- * @returns {Promise} - resolved or rejected promise
+ * @throws {Response & { formattedResponse: string | object }}
+ * @returns {Response} resolved or rejected promise
  */
 
 export async function createMethod<Result = undefined>({
@@ -62,7 +63,7 @@ export async function createMethod<Result = undefined>({
   }
 
   return fetch(formattedUrl, requestOptions)
-    .then(async (response) => {
+    .then(async (response: Response & { formattedResponse?: unknown }) => {
       const meta = {
         ok: response.ok,
         headers: response.headers,
@@ -83,6 +84,8 @@ export async function createMethod<Result = undefined>({
         processedOptions.ok;
 
       if (!(isProcessed || response.ok)) {
+        response.formattedResponse = formattedResponse;
+
         throw response;
       }
 
