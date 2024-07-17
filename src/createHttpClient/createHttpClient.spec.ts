@@ -118,4 +118,24 @@ clientSuite('should apply middleware', async () => {
 
 });
 
+clientSuite.only('should modify response in middleware', async () => {
+  const { post } = createHttpClient({
+    middleware: {
+      response: [
+        (options) => {
+          return Promise.resolve({ ...(options ?? {}), modifiedResponse: 'MODIFIED_RESPONSE', ok: true });
+        },
+      ],
+    },
+  });
+  const params: CreateMethod = {
+    url: endpoint,
+    query: mockQuery,
+  };
+  const response = await post<string>(params);
+
+  assert.match(response, 'MODIFIED_RESPONSE');
+
+});
+
 clientSuite.run();

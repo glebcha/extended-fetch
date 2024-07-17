@@ -1,9 +1,9 @@
-import { MiddlewareHandlers } from '../types';
+import type { MiddlewareHandlers, MiddlewareMeta } from '../types';
 import { is } from '../utils';
 
 export function applyMiddleware(
   options: unknown,
-  meta: Partial<Response>,
+  meta: MiddlewareMeta,
   middleware?: MiddlewareHandlers,
 ) {
   const isValidMiddleware = Array.isArray(middleware) && middleware.length > 0;
@@ -14,7 +14,7 @@ export function applyMiddleware(
 
 function apply(
   options: unknown,
-  meta: Partial<Response>,
+  meta: MiddlewareMeta,
   middleware: MiddlewareHandlers,
 ) {
   const isValidProcessor = (processor: unknown) => ['Function', 'AsyncFunction', 'Promise'].some((accessor) => is[accessor](processor));

@@ -1,5 +1,9 @@
 import { applyMiddleware } from '../applyMiddleware';
-import { CreateMethod, FormattedResponse } from '../types';
+import type {
+  CreateMethod,
+  FormattedResponse,
+  MiddlewareMeta
+} from '../types';
 import { getBody,is } from '../utils';
 
 /**
@@ -64,7 +68,7 @@ export async function createMethod<Result = undefined>({
 
   return fetch(formattedUrl, requestOptions)
     .then(async (response: Response & { formattedResponse?: unknown }) => {
-      const meta = {
+      const meta: MiddlewareMeta = {
         ok: response.ok,
         headers: response.headers,
         status: response.status,
@@ -82,6 +86,10 @@ export async function createMethod<Result = undefined>({
         is.Object(processedOptions) &&
         'ok' in processedOptions &&
         processedOptions.ok;
+      const modifiedResponse =
+        isProcessed && processedOptions?.modifiedResponse ?
+          processedOptions.modifiedResponse :
+          formattedResponse;
 
       if (!(isProcessed || response.ok)) {
         response.formattedResponse = formattedResponse;
@@ -89,6 +97,6 @@ export async function createMethod<Result = undefined>({
         throw response;
       }
 
-      return formattedResponse as (Result extends undefined ? typeof formattedResponse : Result);
+      return modifiedResponse as (Result extends undefined ? typeof formattedResponse : Result);
     });
 }

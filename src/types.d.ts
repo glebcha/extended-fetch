@@ -4,8 +4,13 @@ export type BasicObject = Record<string, unknown>;
 
 export type Method = keyof typeof Methods;
 
+export interface MiddlewareMeta extends Partial<Response> {
+  request?: Omit<Partial<Request>, 'signal'>;
+  signal?: Request['signal'];
+}
+
 export type MiddlewareType = 'request' | 'response';
-export type MiddlewareHandler = (params: unknown, meta: Partial<Response>) => Promise<typeof params>;
+export type MiddlewareHandler = (params: unknown, meta: MiddlewareMeta) => Promise<typeof params>;
 export type MiddlewareHandlers = Array<MiddlewareHandler>;
 export type Middleware = {
   [key in MiddlewareType]?: MiddlewareHandlers
@@ -14,10 +19,10 @@ export type Middleware = {
 export type CreateMethod = {
   query?: unknown,
   url?: string,
-  baseUrl?: string;
+  baseUrl?: string,
   timeout?: number,
   middleware?: Middleware,
-  params?: RequestInit,
+  params?: Partial<RequestInit>,
   method?: Uppercase<`${Methods}`>,
   format?: keyof Omit<Body, 'body' | 'bodyUsed'>,
 };
