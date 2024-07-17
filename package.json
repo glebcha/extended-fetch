@@ -1,6 +1,6 @@
 {
   "name": "extended-fetch",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Extended http client based on fetch",
   "main": "build/umd/extended-fetch.umd.js",
   "module": "build/es/index.js",
