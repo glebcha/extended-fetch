@@ -1,9 +1,0 @@
-node_modules
-build
-build-utils
-dist
-public
-.storybook
-changelog
-rollup.config.*
-postcss.config.*

@@ -3,7 +3,7 @@ pre-commit:
   commands:
     linter:
       glob: "*.{js,ts,jsx,tsx}"
-      run: npx eslint  --cache --fix {staged_files}
+      run: npx biome lint --files-ignore-unknown=true --no-errors-on-unmatched {staged_files}
 pre-push:
   parallel: true
   commands:
