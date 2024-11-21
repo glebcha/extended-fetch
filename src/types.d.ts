@@ -27,16 +27,9 @@ export type CreateMethod = {
   format?: keyof Omit<Body, 'body' | 'bodyUsed'>,
 };
 
-type CreateHttpClientOptions = {
+export type CreateHttpClientOptions = {
   baseUrl?: string;
   middleware?: Middleware;
-};
-
-type ErrorText = 'ErrorText' | 'error_text';
-type ErrorCode = 'ErrorCode' | 'error_code';
-type ErrorFields = ErrorText | ErrorCode;
-type ErrorBody = {
-  [key in ErrorFields]?: string
 };
 
 type ResponseFormats = keyof Omit<Body, 'body' | 'bodyUsed' | 'json'>;
