@@ -14,6 +14,13 @@ export function getOutputOptions({ moduleType, version, names, paths }) {
     {
       format: moduleType,
       sourcemap: !isESM,
+      entryFileNames: (chunkInfo) => {
+        if (isESM && chunkInfo.name.includes('node_modules')) {
+          return chunkInfo.name.replace('node_modules', 'esm-dependencies') + '.js';
+        }
+
+        return '[name].js';
+      }
     },
     isESM ?
     {

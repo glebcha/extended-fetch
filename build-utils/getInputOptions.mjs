@@ -3,7 +3,6 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import esbuild from 'rollup-plugin-esbuild'
 import filesize from 'rollup-plugin-filesize';
-import renameNodeModules from 'rollup-plugin-rename-node-modules';
 
 export function getInputOptions({ moduleType, names, paths }) {
   const isESM = moduleType === 'es';
@@ -27,7 +26,6 @@ export function getInputOptions({ moduleType, names, paths }) {
           sourceMap: false,
           include: '**/node_modules/**',
         }),
-        isESM && renameNodeModules('esm-dependencies', false),
         !isESM && filesize({ showBrotliSize: true }),
     ],
   };
