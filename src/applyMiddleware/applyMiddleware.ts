@@ -17,7 +17,8 @@ function apply(
   meta: MiddlewareMeta,
   middleware: MiddlewareHandlers,
 ) {
-  const isValidProcessor = (processor: unknown) => ['Function', 'AsyncFunction', 'Promise'].some((accessor) => is[accessor](processor));
+  const accessorTypes = ['Function', 'AsyncFunction', 'Promise'] as const;
+  const isValidProcessor = (processor: unknown) => accessorTypes.some((accessor) => is[accessor](processor));
 
   return  middleware.reduce<Promise<unknown>>((changedOptions, processor) => {
     const shouldProcess = isValidProcessor(processor);

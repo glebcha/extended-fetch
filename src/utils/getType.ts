@@ -1,10 +1,6 @@
-interface CheckFunctions {
-  [checkType: string]: (value: unknown) => boolean
-}
-
 const modifier = (type: string) => (item: unknown) => Object.prototype.toString.call(item) === `[object ${type}]`;
 
-const checkTypes: Array<string> = [
+const checkTypes = [
   'Array',
   'AbortSignal',
   'AbortController',
@@ -16,17 +12,22 @@ const checkTypes: Array<string> = [
   'Symbol',
   'Null',
   'Promise',
-];
+] as const;
+
 const specialCheckFunctions = {
   Date: (value: unknown): boolean => (value instanceof Date),
   Object: isObject,
   Headers: isHeaders,
 };
 
-const checkFunctions = checkTypes.reduce<CheckFunctions & typeof specialCheckFunctions>((checkers, type) => ({
+type CheckFunctions = typeof specialCheckFunctions & {
+  [checkType in typeof checkTypes[number]]: (value: unknown) => boolean;
+};
+
+const checkFunctions = checkTypes.reduce((checkers, type) => ({
   ...checkers,
   [type]: modifier(type),
-}), { ...specialCheckFunctions });
+}), specialCheckFunctions as CheckFunctions);
 
 function isObject(income: unknown): income is Record<string | number | symbol, unknown> {
   return Object.prototype.toString.call(income) === '[object Object]';
