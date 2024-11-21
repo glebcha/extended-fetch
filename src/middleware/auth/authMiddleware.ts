@@ -48,11 +48,13 @@ export function initAuthMiddleware(initParams: AuthMiddlewareParams) {
       return { ...sanitizedOptions, headers };
     }
 
-    const body = method !== Methods['GET'] ? getBody({ refreshToken: currentSessionTokens.refreshToken }) : null;
+    const body =
+      method !== Methods['GET'] ?
+      getBody({ refreshToken: currentSessionTokens.refreshToken }) :
+      null;
     const errorHandler =
       typeof handleAuthError === 'function' ?
         handleAuthError :
-        // eslint-disable-next-line no-console
         () => console.warn('Failed to refresh authorization token');
 
     if (globalThis[LIB_ID] && globalThis[LIB_ID]?.isWaitingAuth) {
