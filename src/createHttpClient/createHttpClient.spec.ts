@@ -118,7 +118,7 @@ clientSuite('should apply middleware', async () => {
 
 });
 
-clientSuite.only('should modify response in middleware', async () => {
+clientSuite('should modify response in middleware', async () => {
   const { post } = createHttpClient({
     middleware: {
       response: [
