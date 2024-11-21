@@ -192,3 +192,54 @@ export const getPerson = (id: number) => {
     });
 };
 ```
+
+### **Utilities:**
+
+* Check data type
+
+>  - Array
+>  - AbortSignal
+>  - AbortController
+>  - AsyncFunction
+>  - Boolean
+>  - Date
+>  - Function
+>  - Headers
+>  - Number
+>  - Null
+>  - Object
+>  - Promise
+>  - String
+>  - Symbol
+
+
+```javascript
+import { is } from 'extended-fetch';
+
+const year = is.Date(unknownVar) ? unknownVar.getFullYear() : null;
+
+console.log({ year });
+```
+
+* Safely stringify JSON
+
+```javascript
+import { safeJsonStringify } from 'extended-fetch';
+
+const stringifiedJson = safeJsonStringify({ data: ['test'] });
+const stringifiedJsonPretty = safeJsonStringify({ pretty: { data: 'test' } }, 2);
+
+console.log({ stringifiedJson, stringifiedJsonPretty });
+```
+
+* Extend fetch headers
+
+```javascript
+import { applyHeaders } from 'extended-fetch';
+
+const authHeaders = { 'Authorization': `Bearer ${tokens.accessToken}` };
+
+applyHeaders(authHeaders, responseHeadersFromFetchInstance);
+
+console.log(responseHeadersFromFetchInstance);
+```
