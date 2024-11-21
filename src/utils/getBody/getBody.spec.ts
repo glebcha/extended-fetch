@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/require-await */
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
@@ -8,7 +7,7 @@ import { getBody } from './getBody';
 
 const clientSuite = suite('Safe JSON Stringify');
 
-clientSuite('should output object with formatted sql string', async () => {
+clientSuite('should output object with formatted sql string', () => {
   const result = getBody(query);
 
   assert.equal(result.length, 22);
