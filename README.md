@@ -152,7 +152,11 @@ api.post({
   query: { text: 'New record' }
   middleware: {
     request: [
-      (options) => ({ ...options, format: 'text' })
+      (options) => ({
+        ...options,
+        baseUrl: '/v2',
+        format: 'text',
+      })
     ]
   }
 });

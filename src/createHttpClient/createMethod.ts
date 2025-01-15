@@ -32,17 +32,13 @@ export async function createMethod<Result = undefined>({
   method = 'GET',
   format = 'json',
 }: CreateMethod) {
-  const hasBaseUrl = typeof baseUrl === 'string';
-  const formattedUrl = `${hasBaseUrl ? baseUrl : ''}${hasBaseUrl && !url ? '' : url ?? '/'}`;
+  const shouldSetRequestBody = query && method !== 'GET';
   const defaultHeaders = { 'Content-Type': 'application/json' };
   const {
     signal,
     headers = {},
     ...restParams
   } = params;
-  const abortController = new AbortController();
-  const abortSignal = is.AbortSignal(signal) ? signal : abortController.signal;
-  const shouldSetRequestBody = query && method !== 'GET';
   const options = Object.assign(
     { headers: { ...defaultHeaders, ...headers } },
     shouldSetRequestBody && { body: getBody(query) },
@@ -53,6 +49,22 @@ export async function createMethod<Result = undefined>({
     { headers: new Headers() },
     middleware.request,
   );
+  const hasMiddlewareBaseUrl =
+    is.Object(processedOptions) &&
+    'baseUrl' in processedOptions &&
+    typeof processedOptions?.baseUrl === 'string';
+  const middlewareBaseUrl =
+    hasMiddlewareBaseUrl ? processedOptions.baseUrl : null;
+  const hasBaseUrl = typeof baseUrl === 'string' || typeof middlewareBaseUrl === 'string';
+  const formattedUrl = `${
+    hasBaseUrl ? (middlewareBaseUrl ?? baseUrl) : ''
+  }${
+    hasBaseUrl && !url ? '' : url ?? '/'
+  }`;
+
+  const abortController = new AbortController();
+  const abortSignal = is.AbortSignal(signal) ? signal : abortController.signal;
+
   const isValidOptions = is.Object(processedOptions);
   const requestOptions = Object.assign(
     {
