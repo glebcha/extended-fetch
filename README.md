@@ -197,6 +197,28 @@ export const getPerson = (id: number) => {
 };
 ```
 
+### **Return custom response in middleware**
+
+```javascript
+const api = createHttpClient({
+  middleware: {
+    response: [
+      (response) => {
+        const customResponse = {
+          updated: true,
+          message: 'response modified',
+        };
+        return { ok: true, modifiedResponse: customResponse };
+      }
+    ]
+  }
+});
+
+api.get({ url: '/api/books/12' }).then((result) => {
+  console.log(result); // { updated: true, message: 'response modified' }
+});
+```
+
 ### **Utilities:**
 
 * Check data type

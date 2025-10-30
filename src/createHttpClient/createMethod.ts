@@ -94,17 +94,20 @@ export async function createMethod<Result = undefined>({
         Array.isArray(middleware.response) ?
           await applyMiddleware(formattedResponse, meta, middleware.response) :
           null;
+
       const isProcessed =
         is.Object(processedOptions) &&
-        'ok' in processedOptions &&
-        processedOptions.ok;
+        'ok' in processedOptions
+
+      const isSucceeded = isProcessed ? processedOptions.ok : response.ok
+
       const modifiedResponse =
         isProcessed && processedOptions?.modifiedResponse ?
           processedOptions.modifiedResponse :
           formattedResponse;
 
-      if (!(isProcessed || response.ok)) {
-        response.formattedResponse = formattedResponse;
+      if (!isSucceeded) {
+        response.formattedResponse = modifiedResponse;
 
         throw response;
       }

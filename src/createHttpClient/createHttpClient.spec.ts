@@ -138,4 +138,49 @@ clientSuite('should modify response in middleware', async () => {
 
 });
 
+clientSuite('should throw response as error from middleware when ok=false', async () => {
+  const { post } = createHttpClient({
+    middleware: {
+      response: [(options) => {
+        return Promise.resolve({ ...(options ?? {}), ok: false });
+      },],
+    },
+  });
+
+  const params: CreateMethod = { url: endpoint, query: mockQuery };
+
+  try {
+    await post(params);
+    assert.unreachable('should have thrown');
+  } catch (err) {
+    assert.instance(err, Response);
+    assert.is((err as Response).ok, true);
+    assert.is((err as Response).status, 200);
+  }
+});
+
+clientSuite('should throw formatted response from response middleware when ok=false and modifiedResponse is present', async () => {
+  const { post } = createHttpClient({
+    middleware: {
+      response: [(options) => {
+        const modifiedResponse = new Response('MODIFIED_RESPONSE', { status: 401 });
+        return Promise.resolve({ ...(options ?? {}), ok: false, modifiedResponse });
+      },],
+    },
+  });
+
+  const params: CreateMethod = { url: endpoint, query: mockQuery };
+
+  try {
+    await post(params);
+    assert.unreachable('should have thrown');
+  } catch (err) {
+    assert.instance(err, Response);
+    const formattedResponse = (err as Response & { formattedResponse: Response }).formattedResponse;
+    assert.instance(formattedResponse, Response);
+    assert.match(await formattedResponse.text(), 'MODIFIED_RESPONSE');
+    assert.is(formattedResponse?.status, 401);
+  }
+});
+
 clientSuite.run();
