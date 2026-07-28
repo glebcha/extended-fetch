@@ -1,18 +1,18 @@
-import path from 'path';
-import glob from 'fast-glob';
-import { cp } from 'fs/promises';
-import { readConfig } from './readConfig.mjs';
+import { copyFile, mkdir } from 'node:fs/promises';
+import path from 'node:path';
 
-const { types = {} } = await readConfig('.buildrc');
-const exclusionsList = types.exclusions?.list ?? [];
-const ignore = `${types.exclusions?.path ?? ''}/!(${exclusionsList.join('|')}).*`;
-const destinationBaseDir = path.join('build', 'es');
+const declarations = [
+  'global.d.ts',
+  'types.d.ts',
+  'middleware/auth/types.d.ts'
+];
 
-glob(['src/**/*.d.ts'], { ignore })
-	.then(sources => Promise.allSettled(
-		sources.map(source => {
-			const destination = source.replace(/^src/, destinationBaseDir);
+await Promise.all(
+  declarations.map(async declaration => {
+    const source = path.join('src', declaration);
+    const destination = path.join('build', 'es', declaration);
 
-			return cp(source, destination);
-		})
-	));
+    await mkdir(path.dirname(destination), { recursive: true });
+    await copyFile(source, destination);
+  })
+);
